@@ -6,10 +6,28 @@ const websiteNameEl = document.querySelector('#website-name');
 const websiteUrlEl = document.querySelector('#website-url');
 const bookmarksContainer = document.querySelector('#booksmarks-container');
 
+let bookmarks = [];
+
 // show modal
 function showModal() {
   modal.classList.add('show-modal');
   websiteNameEl.focus();
+}
+// fetch bookmark from local storage
+function fetchBookmark() {
+  // if avail get bookmark from ls
+  if (localStorage.getItem('bookmarks')) {
+    bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+  } else {
+    // create bookmarks array in ls
+    bookmarks = {
+      name: 'github',
+      url: 'githum.com',
+    };
+
+    localStorage.setItem(bookmarks, JSON.stringify(bookmarks));
+  }
+  console.log(bookmarks);
 }
 
 function storeBookmark(e) {
@@ -24,6 +42,18 @@ function storeBookmark(e) {
   if (!validate(nameValue, urlValue)) {
     return false;
   }
+  // bookmark object
+  const bookmark = {
+    name: nameValue,
+    url: urlValue,
+  };
+  bookmarks.push(bookmark);
+  localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+
+  fetchBookmark();
+
+  bookmarkForm.reset();
+  websiteNameEl.focus();
 }
 
 // Validate form
@@ -37,10 +67,10 @@ function validate(nameValue, urlValue) {
 
   const regex = new RegExp(expression);
   if (urlValue.match(regex)) {
-    console.log('mat');
+    console.log('matched');
   }
   if (!urlValue.match(regex)) {
-    console.log('didnt');
+    console.log('enter correct url');
   }
 
   return true;
@@ -59,3 +89,5 @@ window.addEventListener('click', (e) => {
 });
 
 bookmarkForm.addEventListener('submit', storeBookmark);
+// On load fetch from bookmarks
+fetchBookmark();
