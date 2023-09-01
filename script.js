@@ -5,6 +5,7 @@ const bookmarkForm = document.querySelector('#bookmark-form');
 const websiteNameEl = document.querySelector('#website-name');
 const websiteUrlEl = document.querySelector('#website-url');
 const bookmarksContainer = document.querySelector('#bookmarks-container');
+const deleteBookmarkEl = document.getElementById('delete-bookmark');
 
 let bookmarks = [];
 
@@ -13,10 +14,11 @@ function showModal() {
   modal.classList.add('show-modal');
   websiteNameEl.focus();
 }
+
 // Build Bookmarks
 function buildBookmarks() {
   // Remove all bookmark elements
-  //   bookmarksContainer.textContent = '';
+  bookmarksContainer.textContent = '';
   // Build items
   bookmarks.forEach((bookmark) => {
     const { name, url } = bookmark;
@@ -43,16 +45,21 @@ function fetchBookmark() {
     bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
   } else {
     // create bookmarks array in ls
-    bookmarks = {
-      name: 'github',
-      url: 'https://githum.com',
-    };
+    bookmarks = [
+      {
+        name: 'github',
+        url: 'https://github.com',
+      },
+    ];
 
     localStorage.setItem(bookmarks, JSON.stringify(bookmarks));
   }
   console.log(bookmarks);
   buildBookmarks();
 }
+
+// Delete bookmarks
+function deleteBookmark() {}
 
 function storeBookmark(e) {
   e.preventDefault();
@@ -100,7 +107,7 @@ function validate(nameValue, urlValue) {
   return true;
 }
 
-// Event listner
+// Modal Event listner
 modalShow.addEventListener('click', showModal);
 modalClose.addEventListener('click', () => {
   modal.classList.remove('show-modal');
@@ -112,6 +119,8 @@ window.addEventListener('click', (e) => {
   e.p;
 });
 
+// Event Listner
 bookmarkForm.addEventListener('submit', storeBookmark);
+
 // On load fetch from bookmarks
 fetchBookmark();
